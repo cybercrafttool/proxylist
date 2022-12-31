@@ -12,7 +12,12 @@ export const ProxyScrape = async ({
     url.searchParams.set('protocol', validateProtocol(protocol))
     url.searchParams.set('timeout', timeout.toString())
     url.searchParams.set('country', country)
+    try {
 
-    const resp = await got.get(url).text()
-    return resp.split(/\r?\n/)
+        const resp = await got.get(url).text()
+        return resp.split(/\r?\n/)
+    } catch (error) {
+        return []
+    }
+
 }
