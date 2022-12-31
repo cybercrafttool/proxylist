@@ -1,0 +1,30 @@
+name: Proxy Update
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2      
+        with:
+         persist-credentials: false
+         fetch-depth: 0
+      - name: Scraping
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17.x
+      - run: npm install
+      - run: node grabber.js
+      - name: commit change
+        run: |
+          set -o pipefail
+          bash cleaning-result-branch.sh
+      
+      - name: Github Push
+        uses: ad-m/github-push-action@master
+        with:
+          force: true
+          directory: "."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: results
