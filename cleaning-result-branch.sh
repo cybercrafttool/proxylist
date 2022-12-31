@@ -1,5 +1,5 @@
 #!/bin/bash
-rm -rf .git
+find . ! -name '*.txt' -type f -exec rm -f {} +
 git init
 git config --global --add safe.directory /github/workspace
 git config --local user.email "binsarjr121@gmail.com"
@@ -9,7 +9,6 @@ git config --global --add safe.directory /github/workspace
 # echo "!*.txt" >> .gitignore
 # echo "!countries" >> .gitignore
 
-find . ! -name '*.txt' -type f -exec rm -f {} +
 
 git add -A
 
