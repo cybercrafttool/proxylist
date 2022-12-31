@@ -16,7 +16,8 @@ export const FreeProxyList = async ({
     country = 'all'
 } = {}) => {
     if (!/https?/.test(protocol)) return []
-    const body = await got.get(startUrls[0])
+    const bodies = await Promise.all(startUrls.map(url => got.get(url).text()))
+    const body = bodies.join('')
     const $ = load(body)
     const results = []
     $('#proxylisttable tbody tr').each((el) => {
