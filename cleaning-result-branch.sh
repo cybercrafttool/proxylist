@@ -5,10 +5,11 @@ git config --global --add safe.directory /github/workspace
 git config --local user.email "binsarjr121@gmail.com"
 git config --local user.name "binsarjr"
 git config --global --add safe.directory /github/workspace
-echo "*" > .gitignore
-echo "!*.txt" >> .gitignore
-echo "!countries" >> .gitignore
+# echo "*" > .gitignore
+# echo "!*.txt" >> .gitignore
+# echo "!countries" >> .gitignore
 
+find . ! -name '*.txt' -type f -exec rm -f {} +
 
 git add -A
 
