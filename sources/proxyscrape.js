@@ -1,7 +1,7 @@
 import got from "got"
 import {
     validateProtocol
-} from "./validator.js"
+} from "../validator.js"
 
 export const ProxyScrape = async ({
     protocol = 'all',
