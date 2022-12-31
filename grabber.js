@@ -15,6 +15,7 @@ writeFileSync('socks5.txt', (await ProxyScrape({protocol:'socks5'})).join("\n"))
 
 const countryCode = readFileSync('country-code.json')
 const countries = JSON.parse(countryCode.toString())
+
 Object.keys(countries).map(async code => {
     const country = countries[code];
     !existsSync(country) && mkdirSync(country, {
