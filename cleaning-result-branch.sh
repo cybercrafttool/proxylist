@@ -7,6 +7,7 @@ git config --local user.name "binsarjr"
 git config --global --add safe.directory /github/workspace
 echo "*" > .gitignore
 echo "!*.txt" >> .gitignore
+echo "!countries" >> .gitignore
 
 
 git add -A
