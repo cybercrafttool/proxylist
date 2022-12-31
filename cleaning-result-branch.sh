@@ -7,11 +7,6 @@ git config --local user.name "binsarjr"
 git config --global --add safe.directory /github/workspace
 echo "*" > .gitignore
 echo "!*.txt" >> .gitignore
-# rm package.json
-# rm pnpm*
-# rm grabber
-# .gitignore
-
 
 
 git add -A

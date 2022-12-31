@@ -5,4 +5,6 @@ import {
     writeFileSync
 } from 'fs'
 
-writeFileSync('proxyscrape.txt', (await ProxyScrape()).join("\n"))
+writeFileSync('http.txt', (await ProxyScrape({protocol:'http'})).join("\n"))
+writeFileSync('socks4.txt', (await ProxyScrape({protocol:'socks4'})).join("\n"))
+writeFileSync('socks5.txt', (await ProxyScrape({protocol:'socks5'})).join("\n"))
