@@ -1,2 +1,2 @@
 # Automation Proxy List
-Check branch `results` or [this](https://github.com/binsarjr/proxylist/tree/results) for the proxy list
+Check branch `results` or [this](https://github.com/resource-collector/proxylist/tree/results) for the proxy list
