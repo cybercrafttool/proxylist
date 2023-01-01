@@ -6,9 +6,9 @@ import {
 import {
     load
 } from "cheerio"
+import proxyList from "./sources/proxy-list.js"
 
-
-freeproxylist.config.lists.map(async list => {
+const handler = async  list => {
     const body = await got.get(list.link.url, list.gotOptions).text()
     const $ = load(body)
     list.items.map(item => {
@@ -27,4 +27,7 @@ freeproxylist.config.lists.map(async list => {
             DataPipe.emit('data', result)
         })
     })
-})
+}
+
+// freeproxylist.config.lists.map(handler)
+proxyList.config.lists.map(handler)
