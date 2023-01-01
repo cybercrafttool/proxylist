@@ -29,5 +29,5 @@ const handler = async  list => {
     })
 }
 
-// freeproxylist.config.lists.map(handler)
-proxyList.config.lists.map(handler)
+freeproxylist.config.lists.map(handler)
+// proxyList.config.lists.map(handler)

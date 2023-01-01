@@ -1,6 +1,6 @@
 #!/bin/bash
 mv results/* .
-find . ! -name '*.txt' -type f -exec rm -f {} +
+find . ! -name '*.proxy.txt' -type f -exec rm -f {} +
 git init
 git config --global --add safe.directory /github/workspace
 git config --local user.email "binsarjr121@gmail.com"
