@@ -39,7 +39,7 @@ let listDefinition = {
                 name: 'protocol',
                 selector: 'td:nth-child(7)',
                 parse: function (text) {
-                   return 'http' 
+                    return text == 'yes' ? 'https' : 'http'
                 },
             },
         ],
@@ -50,7 +50,7 @@ let listDefinition = {
 export default {
     name: "FreeProxyList",
     availableProtocols: ['http'],
-    gotOptions:{},
+    gotOptions: {},
     config: {
         lists: _.map(startUrls, function (startUrl) {
             return _.extend({}, listDefinition, {

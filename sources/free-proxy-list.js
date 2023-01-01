@@ -38,9 +38,9 @@ let listDefinition = {
             },
             {
                 name: 'protocol',
-                selector: 'td:nth-child(7)',
+                selector: 'td:nth-child(9)',
                 parse: function (text) {
-                    return 'http'
+                    return text.trim().toLowerCase()
                 },
             },
         ],
