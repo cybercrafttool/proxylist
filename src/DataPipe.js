@@ -46,7 +46,8 @@ DataPipe.on('data', async ({
 }) => {
     const hostname = `${ipAddress}:${port}`
     // Process by country
-    const countryExist = (await find(hostname, folderCountries, '.proxy.txt$')).length
+    // const countryExist = (await find(hostname, folderCountries, '.proxy.txt$')).length
+    const countryExist = false // disable duplicate for now
     if (!countryExist) {
         // only process country code listing
         if (CountryCode[countryCode]) {
@@ -63,7 +64,8 @@ DataPipe.on('data', async ({
 
     // Process By All
     const protocolPath = path.join(folderAll, `${protocol}.proxy.txt`);
-    const exist = (await find(hostname, folderAll, '.proxy.txt$')).length
+    // const exist = (await find(hostname, folderAll, '.proxy.txt$')).length
+    const exist = false // disable duplicate for now
     if (!exist) appendFileSync(protocolPath, hostname + '\n')
     console.log(hostname)
 
