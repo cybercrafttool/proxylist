@@ -1,14 +1,13 @@
 import got from "got"
-import freeproxylist from "./sources/freeproxylist.js"
 import {
     DataPipe
 } from "./src/DataPipe.js"
 import {
     load
 } from "cheerio"
-import proxyList from "./sources/proxy-list.js"
+import glob from 'glob'
 
-const handler = async  list => {
+const handler = async list => {
     const body = await got.get(list.link.url, list.gotOptions).text()
     const $ = load(body)
     list.items.map(item => {
@@ -20,7 +19,7 @@ const handler = async  list => {
                 parse
             }) => {
                 let text = $(el).find(selector).text()
-                if (parse) text = parse(text)
+                if (parse) text = parse(text, $(el).find(selector).html())
                 result[name] = text
 
             })
@@ -29,5 +28,11 @@ const handler = async  list => {
     })
 }
 
-freeproxylist.config.lists.map(handler)
-// proxyList.config.lists.map(handler)
+
+glob('./sources/**/*.js', async (er, files) => {
+    files.map(async file => {
+        const proxyFileMatcher = await import(file)
+
+        proxyFileMatcher.default.config.lists.map(handler)
+    })
+})
