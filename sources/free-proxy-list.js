@@ -50,7 +50,7 @@ let listDefinition = {
 
 export default {
     name: "FreeProxyList",
-    availableProtocols: ['http'],
+    type: 'scrape',
     gotOptions: {},
     config: {
         lists: _.map(startUrls, function (startUrl) {

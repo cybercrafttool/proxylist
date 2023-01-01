@@ -44,6 +44,10 @@ DataPipe.on('data', async ({
     countryCode,
     protocol
 }) => {
+    if (!(ipAddress && port)) {
+        console.log("IP Address dan port ada yang tak terbaca")
+        return
+    }
     const hostname = `${ipAddress}:${port}`
     // Process by country
     const countryExist = (await find(hostname, folderCountries, '.proxy.txt$')).length

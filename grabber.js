@@ -7,7 +7,7 @@ import {
 } from "cheerio"
 import glob from 'glob'
 
-const handler = async list => {
+const scrapeHandler = async list => {
     const body = await got.get(list.link.url, list.gotOptions).text()
     const $ = load(body)
     list.items.map(item => {
@@ -28,11 +28,28 @@ const handler = async list => {
     })
 }
 
+const apiHandler = async (list) => {
+    const items = await list.getData()
+    items.map(item => {
+        const [ipAddress, port] = item.split(':')
+        DataPipe.emit('data', {
+            protocol: list.protocol,
+            ipAddress,
+            port
+        })
+    })
+
+}
 
 glob('./sources/**/*.js', async (er, files) => {
     files.map(async file => {
         const proxyFileMatcher = await import(file)
-
-        proxyFileMatcher.default.config.lists.map(handler)
+        const handlers = {
+            'scrape': () => proxyFileMatcher.default.config.lists.map(scrapeHandler),
+            'api': () => proxyFileMatcher.default.config.lists.map(apiHandler)
+        }
+        let handler = handlers[proxyFileMatcher.default.type]
+        if (handler) handler()
+        else throw new Error(`Tidak ada handler untuk ${proxyFileMatcher.default.type}`)
     })
 })
