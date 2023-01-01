@@ -1,7 +1,4 @@
-import {
-    load
-} from "cheerio"
-import got from "got"
+import _ from 'underscore'
 
 let startUrls = [
     'https://free-proxy-list.net/',
@@ -11,20 +8,56 @@ let startUrls = [
     'https://free-proxy-list.net/anonymous-proxy.html',
 ];
 
-export const FreeProxyList = async ({
-    protocol = 'all',
-    country = 'all'
-} = {}) => {
-    if (!/https?/.test(protocol)) return []
-    const bodies = await Promise.all(startUrls.map(url => got.get(url).text()))
-    const body = bodies.join('')
-    const $ = load(body)
-    const results = []
-    $('#proxylisttable tbody tr').each((el) => {
-        const ip = $(el).find('td:nth-child(1)').text()
-        const port = $(el).find('td:nth-child(2)').text()
-        const countryCode = $(el).find('td:nth-child(3)').text().toLowerCase()
-        if (country == 'all' || country == countryCode) results.push(`${ip}:${port}`)
-    })
-    return results
+let listDefinition = {
+    link: {
+        url: null,
+    },
+    items: [{
+        selector: '.fpl-list table tbody tr',
+        attributes: [{
+                name: 'ipAddress',
+                selector: 'td:nth-child(1)',
+            },
+            {
+                name: 'port',
+                selector: 'td:nth-child(2)',
+                parse: function (text) {
+                    var port = parseInt(text);
+                    if (_.isNaN(port)) return null;
+                    return port;
+                },
+            },
+            {
+                name: 'countryCode',
+                selector: 'td:nth-child(3)',
+                parse: function (text) {
+                    text = text.trim().toLowerCase();
+                    return text
+                },
+            },
+            {
+                name: 'protocol',
+                selector: 'td:nth-child(7)',
+                parse: function (text) {
+                   return 'http' 
+                },
+            },
+        ],
+    }],
+}
+
+
+export default {
+    name: "FreeProxyList",
+    availableProtocols: ['http'],
+    gotOptions:{},
+    config: {
+        lists: _.map(startUrls, function (startUrl) {
+            return _.extend({}, listDefinition, {
+                link: {
+                    url: startUrl
+                },
+            });
+        })
+    }
 }

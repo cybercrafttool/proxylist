@@ -2,11 +2,17 @@ lockfileVersion: 5.4
 
 specifiers:
   cheerio: 1.0.0-rc.12
+  events: ^3.3.0
+  find-in-files: ^0.5.0
   got: ^12.5.3
+  underscore: ^1.13.6
 
 dependencies:
   cheerio: 1.0.0-rc.12
+  events: 3.3.0
+  find-in-files: 0.5.0
   got: 12.5.3
+  underscore: 1.13.6
 
 packages:
 
@@ -126,6 +132,24 @@ packages:
     engines: {node: '>=0.12'}
     dev: false
 
+  /events/3.3.0:
+    resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
+    engines: {node: '>=0.8.x'}
+    dev: false
+
+  /find-in-files/0.5.0:
+    resolution: {integrity: sha512-VraTc6HdtdSHmAp0yJpAy20yPttGKzyBWc7b7FPnnsX9TOgmKx0g9xajizpF/iuu4IvNK4TP0SpyBT9zAlwG+g==}
+    dependencies:
+      find: 0.1.7
+      q: 1.5.1
+    dev: false
+
+  /find/0.1.7:
+    resolution: {integrity: sha512-jPrupTOe/pO//3a9Ty2o4NqQCp0L46UG+swUnfFtdmtQVN8pEltKpAqR7Nuf6vWn0GBXx5w+R1MyZzqwjEIqdA==}
+    dependencies:
+      traverse-chain: 0.1.0
+    dev: false
+
   /form-data-encoder/2.1.4:
     resolution: {integrity: sha512-yDYSgNMraqvnxiEXO4hi88+YZxaHC6QKzb5N84iRCTDeRO7ZALpir/lVmf/uXUhnwUr2O4HU8s/n6x+yNjQkHw==}
     engines: {node: '>= 14.17'}
@@ -228,6 +252,11 @@ packages:
       entities: 4.4.0
     dev: false
 
+  /q/1.5.1:
+    resolution: {integrity: sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==}
+    engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
+    dev: false
+
   /quick-lru/5.1.1:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
@@ -242,4 +271,12 @@ packages:
     engines: {node: '>=14.16'}
     dependencies:
       lowercase-keys: 3.0.0
+    dev: false
+
+  /traverse-chain/0.1.0:
+    resolution: {integrity: sha512-up6Yvai4PYKhpNp5PkYtx50m3KbwQrqDwbuZP/ItyL64YEWHAvH6Md83LFLV/GRSk/BoUVwwgUzX6SOQSbsfAg==}
+    dev: false
+
+  /underscore/1.13.6:
+    resolution: {integrity: sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==}
     dev: false

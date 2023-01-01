@@ -2,7 +2,6 @@ import {
     load
 } from "cheerio"
 import got from "got"
-
 export const ProxyList = async ({
     protocol = 'all',
     country = 'all'
