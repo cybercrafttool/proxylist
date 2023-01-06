@@ -23,11 +23,13 @@ for (const file of readdirSync(allPath)) {
     const filepath = path.join(allPath, file)
     const filename = basename(filepath)
     const protocol = filename.replace(/\.proxy\.txt$/i, '')
-    readFileSync(filepath).toString().split(/\r?\n/).map(line => {
+    for (const line of readFileSync(filepath).toString().split(/\r?\n/)) {
+
+
         const [ipAddress, port] = line.split(':')
         if (!ipAddress) return
         const lookup = geoip.lookup(ipAddress)
-        if (!lookup) return
+        if (!lookup) continue
         DataPipe.emit('data', {
             protocol,
             ipAddress,
@@ -36,6 +38,7 @@ for (const file of readdirSync(allPath)) {
             countryOnly: true
         })
 
-    })
+
+    }
 
 }
