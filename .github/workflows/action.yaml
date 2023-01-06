@@ -16,6 +16,7 @@ jobs:
           node-version: 17.x
       - run: npm install
       - run: node grabber.js
+      - run: DONOT_CLEAR_RESULTS=true node country-check.js
       - name: commit change
         run: |
           set -o pipefail
