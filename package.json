@@ -1,9 +1,13 @@
 {
 	"type": "module",
+	"scripts": {
+		"country": "DONOT_CLEAR_RESULTS=true node country-check.js"
+	},
 	"dependencies": {
 		"cheerio": "1.0.0-rc.12",
 		"events": "^3.3.0",
 		"find-in-files": "^0.5.0",
+		"geoip-country": "^4.1.38",
 		"glob": "^8.0.3",
 		"got": "^12.5.3",
 		"underscore": "^1.13.6"

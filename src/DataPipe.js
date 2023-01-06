@@ -25,10 +25,14 @@ const folderResults = path.join(__dirname, '../results')
 const folderCountries = path.join(folderResults, '/countries');
 const folderAll = path.join(folderResults, '/all');
 // refresh
-existsSync(folderResults) && rmSync(folderResults, {
-    recursive: true,
-    force: true
-})
+if (!process.env.DONOT_CLEAR_RESULTS) {
+    console.log(process.env.DONOT_CLEAR_RESULTS, 'data')
+    existsSync(folderResults) && rmSync(folderResults, {
+        recursive: true,
+        force: true
+    })
+}
+
 mkdirSync(folderCountries, {
     recursive: true
 })
@@ -42,13 +46,16 @@ DataPipe.on('data', async ({
     ipAddress,
     port,
     countryCode,
-    protocol
+    protocol,
+    countryOnly = false
 }) => {
+    if (countryCode) countryCode = countryCode.toLowerCase()
     if (!(ipAddress && port)) {
         console.log("IP Address dan port ada yang tak terbaca")
         return
     }
     const hostname = `${ipAddress}:${port}`
+    console.log(hostname, countryCode)
     // Process by country
     const countryExist = (await find(hostname, folderCountries, '.proxy.txt$')).length
     if (!countryExist) {
@@ -64,11 +71,10 @@ DataPipe.on('data', async ({
 
     }
 
-
+    if (countryOnly) return
     // Process By All
     const protocolPath = path.join(folderAll, `${protocol}.proxy.txt`);
     const exist = (await find(hostname, folderAll, '.proxy.txt$')).length
     if (!exist) appendFileSync(protocolPath, hostname + '\n')
-    console.log(hostname)
 
 })
