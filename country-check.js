@@ -16,6 +16,7 @@ import {
 const __dirname = dirname(fileURLToPath(
     import.meta.url));
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 
 const allPath = path.join(__dirname, 'results/all')
@@ -23,8 +24,9 @@ for (const file of readdirSync(allPath)) {
     const filepath = path.join(allPath, file)
     const filename = basename(filepath)
     const protocol = filename.replace(/\.proxy\.txt$/i, '')
-    for (const line of readFileSync(filepath).toString().split(/\r?\n/)) {
 
+    let i = 0
+    for (const line of readFileSync(filepath).toString().split(/\r?\n/)) {
 
         const [ipAddress, port] = line.split(':')
         if (!ipAddress) return
@@ -37,7 +39,10 @@ for (const file of readdirSync(allPath)) {
             countryCode: lookup.country,
             countryOnly: true
         })
-
+        if (i++ == 100) {
+            await sleep(100)
+            i = 0
+        }
 
     }
 
