@@ -55,7 +55,6 @@ DataPipe.on('data', async ({
         return
     }
     const hostname = `${ipAddress}:${port}`
-    console.log(hostname, countryCode)
     // Process by country
     const countryExist = (await find(hostname, folderCountries, '.proxy.txt$')).length
     if (!countryExist) {
