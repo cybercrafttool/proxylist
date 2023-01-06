@@ -18,7 +18,7 @@ jobs:
       - name: commit change (Country Checker)
         run: |
           set -o pipefail
-          bash download-sources-from-results-branch
+          bash download-sources-from-results-branch.sh
           DONOT_CLEAR_RESULTS=true node country-check.js
           bash cleaning-result-branch.sh
       
