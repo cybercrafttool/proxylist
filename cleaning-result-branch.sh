@@ -1,5 +1,6 @@
 #!/bin/bash
 mv results/* .
+rm -rf node_modules
 find . ! -name '*.proxy.txt' -type f -exec rm -f {} +
 git init
 git config --global --add safe.directory /github/workspace
