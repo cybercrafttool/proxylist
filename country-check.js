@@ -29,7 +29,7 @@ for (const file of readdirSync(allPath)) {
     for (const line of readFileSync(filepath).toString().split(/\r?\n/)) {
 
         const [ipAddress, port] = line.split(':')
-        if (!ipAddress) return
+        if (!ipAddress) continue
         const lookup = geoip.lookup(ipAddress)
         if (!lookup) continue
         DataPipe.emit('data', {
