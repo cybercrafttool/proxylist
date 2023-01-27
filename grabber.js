@@ -121,7 +121,7 @@ const scrapeIpAddOnlyHeadless = async (lists = []) => {
     await browser.close()
 }
 glob('./sources/**/*.js', async (er, files) => {
-    await Promise.all(files.map(async file => {
+    for (const file of files) {
         const proxyFileMatcher = await import(file)
         const handlers = {
             'scrape': () => proxyFileMatcher.default.config.lists.map(scrapeHandler),
@@ -134,6 +134,6 @@ glob('./sources/**/*.js', async (er, files) => {
         else {
             console.error(new Error(`Tidak ada handler untuk ${proxyFileMatcher.default.type}`))
         }
-    }))
+    }
     process.exit()
 })
