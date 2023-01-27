@@ -76,7 +76,7 @@ const scrapeIpAddOnlyHeadless = async (lists = []) => {
     })
 
 
-    for (const items of chunk(lists, chunking)) {
+    for (const items of chunk(lists, 2)) {
         await Promise.all(items.map(async (item, i) => {
             const page = await browser.newPage()
             try {
