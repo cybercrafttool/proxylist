@@ -82,9 +82,15 @@ const scrapeIpAddOnlyHeadless = async (lists = []) => {
     for (const items of chunk(lists, chunking)) {
         await Promise.all(items.map(async (item, i) => {
             const page = pages[i]
-            await page.goto(item.link, {
-                waitUntil: item.domcontentloaded ? 'domcontentloaded' : undefined
-            })
+            try {
+
+                await page.goto(item.link, {
+                    waitUntil: item.domcontentloaded ? 'domcontentloaded' : undefined
+                })
+            } catch (error) {
+                console.error("Tidak bisa mengakses halaman ini", item.link)
+                return
+            }
             let content = await page.content()
             // jika ada cloudflare challenge.tunggu dulu sampai selesai
             if (content.includes('id="challenge-error-title"')) {
