@@ -10,6 +10,9 @@
 		"geoip-country": "^4.1.38",
 		"glob": "^8.0.3",
 		"got": "^12.5.3",
+		"puppeteer": "^19.6.1",
+		"puppeteer-extra": "^3.3.4",
+		"puppeteer-extra-plugin-stealth": "^2.11.1",
 		"underscore": "^1.13.6"
 	}
 }

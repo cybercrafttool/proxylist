@@ -6,6 +6,18 @@ import {
     load
 } from "cheerio"
 import glob from 'glob'
+import {
+    findIpAddress
+} from "./src/utils.js"
+import {
+    executablePath
+} from 'puppeteer'
+import puppeteer from "puppeteer-extra"
+import {
+    chunk
+} from "underscore"
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+puppeteer.use(StealthPlugin())
 
 const scrapeHandler = async list => {
     const body = await got.get(list.link.url, list.gotOptions).text()
@@ -38,18 +50,86 @@ const apiHandler = async (list) => {
             port
         })
     })
-
 }
 
+const scrapeIpAddOnly = async (lists = []) => {
+    await Promise.all(lists.map(async list => {
+        const body = await got.get(list.link).text()
+        const ips = findIpAddress(body)
+        for (const host of chunk(ips, 100)) {
+            host.map(host => {
+                const [ipAddress, port] = host.split(':')
+                DataPipe.emit('data', {
+                    protocol: item.protocol,
+                    ipAddress,
+                    port
+                })
+            })
+        }
+    })).catch(_ => console.error("error", _))
+}
+
+const scrapeIpAddOnlyHeadless = async (lists = []) => {
+    const browser = await puppeteer.launch({
+        ignoreHTTPSErrors: true,
+        executablePath: executablePath()
+    })
+
+    const chunking = 2
+    for (let i = 0; i < chunking - 1; i++) await browser.newPage()
+    const pages = await browser.pages()
+
+    for (const items of chunk(lists, chunking)) {
+        await Promise.all(items.map(async (item, i) => {
+            const page = pages[i]
+            await page.goto(item.link)
+            let content = await page.content()
+            // jika ada cloudflare challenge.tunggu dulu sampai selesai
+            if (content.includes('id="challenge-error-title"')) {
+                await new Promise(async (resolve) => {
+                    const id = setTimeout(resolve, 20000);
+                    while (true) {
+                        content = await page.content()
+                        if (content.includes('id="challenge-error-title"')) {
+                            await page.waitForTimeout(1000)
+                        } else break
+                    }
+                    clearTimeout(id)
+                    resolve(true)
+
+                })
+            }
+
+            const ips = findIpAddress(content)
+            for (const host of chunk(ips, 100)) {
+                host.map(host => {
+                    const [ipAddress, port] = host.split(':')
+                    DataPipe.emit('data', {
+                        protocol: item.protocol,
+                        ipAddress,
+                        port
+                    })
+                })
+            }
+
+        }))
+
+    }
+    await Promise.all(pages.map(page => page.close()))
+    await browser.close()
+}
 glob('./sources/**/*.js', async (er, files) => {
-    files.map(async file => {
+    await Promise.all(files.map(async file => {
         const proxyFileMatcher = await import(file)
         const handlers = {
             'scrape': () => proxyFileMatcher.default.config.lists.map(scrapeHandler),
+            'scrape-ipadd-only': () => scrapeIpAddOnly(proxyFileMatcher.default.config.lists),
+            'scrape-ipadd-only-headless': () => scrapeIpAddOnlyHeadless(proxyFileMatcher.default.config.lists),
             'api': () => proxyFileMatcher.default.config.lists.map(apiHandler)
         }
         let handler = handlers[proxyFileMatcher.default.type]
-        if (handler) handler()
-        else throw new Error(`Tidak ada handler untuk ${proxyFileMatcher.default.type}`)
-    })
+        if (handler) await handler()
+        // else throw new Error(`Tidak ada handler untuk ${proxyFileMatcher.default.type}`)
+    }))
+    process.exit()
 })
