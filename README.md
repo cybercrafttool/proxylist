@@ -3,3 +3,4 @@ Check branch `results` or [this](https://github.com/resource-collector/proxylist
 
 # Futures
 - [ ] Proxy verifier to check ip protocols is http(s) or socks(4/5)
+- [ ] find fast ip
