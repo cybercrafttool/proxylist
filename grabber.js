@@ -75,13 +75,10 @@ const scrapeIpAddOnlyHeadless = async (lists = []) => {
         executablePath: executablePath()
     })
 
-    const chunking = 2
-    for (let i = 0; i < chunking - 1; i++) await browser.newPage()
-    const pages = await browser.pages()
 
     for (const items of chunk(lists, chunking)) {
         await Promise.all(items.map(async (item, i) => {
-            const page = pages[i]
+            const page = await browser.newPage()
             try {
 
                 await page.goto(item.link, {
@@ -119,11 +116,10 @@ const scrapeIpAddOnlyHeadless = async (lists = []) => {
                     })
                 })
             }
-
+            await page.close()
         }))
 
     }
-    await Promise.all(pages.map(page => page.close()))
     await browser.close()
 }
 glob('./sources/**/*.js', async (er, files) => {
