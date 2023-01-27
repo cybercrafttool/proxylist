@@ -129,19 +129,23 @@ process.on('uncaughtException', console.error)
 process.on('unhandledRejection', console.error)
 
 glob('./sources/**/*.js', async (er, files) => {
-    for (const file of files) {
-        const proxyFileMatcher = await import(file)
-        const handlers = {
-            'scrape': () => proxyFileMatcher.default.config.lists.map(scrapeHandler),
-            'scrape-ipadd-only': () => scrapeIpAddOnly(proxyFileMatcher.default.config.lists),
-            'scrape-ipadd-only-headless': () => scrapeIpAddOnlyHeadless(proxyFileMatcher.default.config.lists),
-            'api': () => proxyFileMatcher.default.config.lists.map(apiHandler)
-        }
-        let handler = handlers[proxyFileMatcher.default.type]
-        if (handler) await handler()
-        else {
-            console.error(new Error(`Tidak ada handler untuk ${proxyFileMatcher.default.type}`))
-        }
+
+    for (const items of chunk(files, 3)) {
+        await Promise.all(items.map(async file => {
+            const proxyFileMatcher = await import(file)
+            const handlers = {
+                'scrape': () => proxyFileMatcher.default.config.lists.map(scrapeHandler),
+                'scrape-ipadd-only': () => scrapeIpAddOnly(proxyFileMatcher.default.config.lists),
+                'scrape-ipadd-only-headless': () => scrapeIpAddOnlyHeadless(proxyFileMatcher.default.config.lists),
+                'api': () => proxyFileMatcher.default.config.lists.map(apiHandler)
+            }
+            let handler = handlers[proxyFileMatcher.default.type]
+            if (handler) await handler()
+            else {
+                console.error(new Error(`Tidak ada handler untuk ${proxyFileMatcher.default.type}`))
+            }
+        }))
+
     }
     process.exit()
 })

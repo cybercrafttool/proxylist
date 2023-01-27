@@ -1,7 +1,7 @@
 name: Proxy Update
 on:
   schedule:
-    - cron: "* */1 * * *"
+    - cron: "* */2 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
