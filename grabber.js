@@ -86,6 +86,7 @@ const scrapeIpAddOnlyHeadless = async (lists = []) => {
                 })
             } catch (error) {
                 console.error("Tidak bisa mengakses halaman ini", item.link)
+                await page.close()
                 return
             }
             let content = await page.content()
@@ -122,6 +123,11 @@ const scrapeIpAddOnlyHeadless = async (lists = []) => {
     }
     await browser.close()
 }
+
+
+process.on('uncaughtException', console.error)
+process.on('unhandledRejection', console.error)
+
 glob('./sources/**/*.js', async (er, files) => {
     for (const file of files) {
         const proxyFileMatcher = await import(file)
