@@ -60,7 +60,7 @@ const scrapeIpAddOnly = async (lists = []) => {
             host.map(host => {
                 const [ipAddress, port] = host.split(':')
                 DataPipe.emit('data', {
-                    protocol: item.protocol,
+                    protocol: list.protocol,
                     ipAddress,
                     port
                 })
@@ -82,7 +82,9 @@ const scrapeIpAddOnlyHeadless = async (lists = []) => {
     for (const items of chunk(lists, chunking)) {
         await Promise.all(items.map(async (item, i) => {
             const page = pages[i]
-            await page.goto(item.link)
+            await page.goto(item.link, {
+                waitUntil: item.domcontentloaded ? 'domcontentloaded' : undefined
+            })
             let content = await page.content()
             // jika ada cloudflare challenge.tunggu dulu sampai selesai
             if (content.includes('id="challenge-error-title"')) {
@@ -129,7 +131,9 @@ glob('./sources/**/*.js', async (er, files) => {
         }
         let handler = handlers[proxyFileMatcher.default.type]
         if (handler) await handler()
-        // else throw new Error(`Tidak ada handler untuk ${proxyFileMatcher.default.type}`)
+        else {
+            console.error(new Error(`Tidak ada handler untuk ${proxyFileMatcher.default.type}`))
+        }
     }))
     process.exit()
 })
